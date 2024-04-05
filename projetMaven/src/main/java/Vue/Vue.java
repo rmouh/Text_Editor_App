@@ -2,39 +2,84 @@ package Vue;
 import Controler.Controler;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 
 public class Vue {
     private AnchorPane root;
+    private Scene scene;
+    private Button uploadOriginalFileButton;
+    private Button uploadEditedFileButton;
 
     public Vue() {
+        // Créer les boutons dans Vue
+        this.uploadEditedFileButton = this.createUploadButton("Upload Edited File", 179.0, 2);
+        this.uploadOriginalFileButton = this.createUploadButton("Upload Original File", 179.0, 1);
         root = new AnchorPane();
         root.setStyle("-fx-background-color: #ffd8cf;");
+        this.scene = new Scene(this.getLayout(), 600, 400);
+
         //initializeComponents();
     }
-
-   /* private void initializeComponents() {
-        Button uploadOriginalFileButton = createUploadButton("Upload Original File", 179.0, 1);
-        Button uploadEditedFileButton = createUploadButton("Upload Edited File", 179.0, 2);
-
+    public Button OriginalBouttongetter()
+    {
+        return (this.uploadOriginalFileButton);
+    }
+    public Button EditedBouttongetter()
+    {
+        return (this.uploadEditedFileButton);
+    }
+    public Scene Scenegetter()
+    {
+        return (this.scene);
+    }
+    public void Firstvue ( Stage primaryStage, Controler controler)
+    {
+        // Chargement de l'image depuis les ressources du projet
+        Image image = new Image(getClass().getResourceAsStream("/icon_txt.png"));
+        ImageView imageView1 = this.createImageView(image, 150.0, 200.0, 1);
+        ImageView imageView2 = this.createImageView(image, 150.0, 200.0, 2);
         // Ajouter les boutons à la vue
-        addToView(uploadOriginalFileButton);
-        addToView(uploadEditedFileButton);
+        this.addToView(this.uploadOriginalFileButton,this.uploadEditedFileButton, imageView1, imageView2 );
+
+
+        // Créer la scène et ajouter les boutons de la vue à celle-ci
+        //this.scene = new Scene(this.getLayout(), 600, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // Lier les boutons aux gestionnaires d'événements dans le contrôleur
+        controler.handleUploadButtonClick(uploadOriginalFileButton);
+        controler.handleUploadButtonClick(uploadEditedFileButton);
+    }
+    public void SecondPage (Vue vue, Controler controler, Stage primaryStage)
+    {
+        // Créer les boutons dans Vue
+        Button uploadOriginalFileButton = vue.createUploadButton("Upload Original File", 179.0, 1);
+        Button uploadEditedFileButton = vue.createUploadButton("Upload Edited File", 179.0, 2);
 
         // Chargement de l'image depuis les ressources du projet
         Image image = new Image(getClass().getResourceAsStream("/icon_txt.png"));
-        ImageView imageView1 = createImageView(image, 150.0, 200.0, 1);
-        ImageView imageView2 = createImageView(image, 150.0, 200.0, 2);
+        ImageView imageView1 = vue.createImageView(image, 150.0, 200.0, 1);
+        ImageView imageView2 = vue.createImageView(image, 150.0, 200.0, 2);
+        // Ajouter les boutons à la vue
+        vue.addToView(uploadOriginalFileButton,uploadEditedFileButton, imageView1, imageView2 );
 
-        // Ajouter les images à la vue
-        root.getChildren().addAll(imageView1, imageView2);
-    }*/
+        // Créer la scène et ajouter les boutons de la vue à celle-ci
+        Scene scene = new Scene(vue.getLayout(), 600, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
+        // Lier les boutons aux gestionnaires d'événements dans le contrôleur
+        controler.handleUploadButtonClick(uploadOriginalFileButton);
+        controler.handleUploadButtonClick(uploadEditedFileButton);
+    }
     public Button createUploadButton(String buttonText, double width, int n) {
         Button uploadButton = new Button(buttonText);
         uploadButton.setPrefWidth(width);
@@ -81,6 +126,9 @@ public class Vue {
                 break; // Sortir de la boucle une fois que l'image a été remplacée
             }
         }
+    }
+    public  void showSecondPage(){
+
     }
 
 
