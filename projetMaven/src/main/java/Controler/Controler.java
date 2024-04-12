@@ -4,6 +4,8 @@ import Model.Model;
 import Vue.Vue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -12,12 +14,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
-import javax.management.modelmbean.ModelMBean;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 public class Controler {
-    private Model model;
+   private Model model;
     private Vue vue;
     Stage primaryst;
     @FXML
@@ -26,12 +26,21 @@ public class Controler {
     @FXML
     private Button downloadButton;
 
-    public Controler(Stage primaryStage) {
+    public Controler(Stage primaryStage) throws Exception {
 
         this.vue = new Vue();
         this.model = new Model();
-        //vue.Firstvue(primaryStage, this);
-        this.vue.SecondPage(primaryStage,this);
+        vue.Firstvue(primaryStage, this);
+        //this.vue.SecondPage(primaryStage,this);
+
+        // code qui marche
+        /*Parent root = FXMLLoader.load(getClass().getResource("../test.fxml"));
+        // root = FXMLLoader.load(fxmlPath);
+        primaryStage.setTitle("Interface Utilisateur");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.show();*/
+
+
         this.primaryst=primaryStage;
        /*Scene scene = new Scene(this.getLayout(), 600, 400);
         primaryStage.setScene(scene);
@@ -66,7 +75,11 @@ public class Controler {
 
                         if(model.verifyDownload()){
                             System.out.println("if reussi");
-                            redirectToSecondPage();
+                            try {
+                                redirectToSecondPage();
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
                         }
 
                     } else {
@@ -78,29 +91,29 @@ public class Controler {
         });
     }
 
-    private void redirectToSecondPage() {
+    private void redirectToSecondPage() throws Exception {
         // Créer la deuxième page avec les boutons et les éléments nécessaires
         // ...
         System.out.println("redirect to 2nd pg");
         vue.SecondPage(this.primaryst,this); // Afficher la deuxième page
     }
 
-   /* @FXML
+    @FXML
     void handleSaveButtonClic(ActionEvent event) {
         // Cast de l'événement en tant que bouton cliqué
-        *//*Button clickedButton = (Button) event.getSource();
+        //*Button clickedButton = (Button) event.getSource();
 
         // Récupérer l'image associée au bouton cliqué
-        ImageView imageView = (ImageView) clickedButton.getGraphic();
+        ImageView imageView = (ImageView) saveButton.getGraphic();
 
         // Modifier l'image associée
-        Image newImage = new Image(getClass().getResourceAsStream("downloads.png"));
+        Image newImage = new Image(getClass().getResourceAsStream("../downloads.png"));
         imageView.setImage(newImage);
 
         // Afficher un autre bouton
-        downloadButton.setVisible(true); *//*// Assurez-vous que "autreBouton" est bien un autre bouton dans votre scène
+        downloadButton.setVisible(true);// Assurez-vous que "autreBouton" est bien un autre bouton dans votre scène
     }
-*/
+
 
 
 

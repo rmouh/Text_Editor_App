@@ -22,56 +22,57 @@
             <VBox layoutX="14.0" layoutY="21.0" prefHeight="121.0" prefWidth="41.0">
                <children>
                   <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="61.0" style="-fx-background-color: #ffd8cf;">
-                     <graphic>
+                     <!--<graphic>
                         <ImageView fitHeight="51.0" fitWidth="34.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" translateX="5.0">
-                              <Image url="editing.png" />
+                           <image>
+                              <Image url="@editing.png" />
                            </image>
                            <viewport>
                               <Rectangle2D />
                            </viewport>
                         </ImageView>
-                     </graphic>
+                     </graphic>-->
                   </Button>
                   <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="30.0" style="-fx-background-color: #ffd8cf;">
-                     <graphic>
+                     <!--<graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" translateX="2.0">
                            <image>
-                              <Image url="delete.png" />
+                              <Image url="@delete.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
+                     </graphic>--></Button>
                   <Button mnemonicParsing="false" prefHeight="87.0" prefWidth="63.0" style="-fx-background-color: #ffd8cf;">
-                     <graphic>
+                     <!--<graphic>
                         <ImageView fitHeight="38.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true" translateX="2.0">
                            <image>
-                              <Image url="chat.png" />
+                              <Image url="@chat.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
+                     </graphic>--></Button>
                </children>
             </VBox>
             <VBox layoutX="570.0" layoutY="14.0" prefHeight="101.0" prefWidth="42.0">
                <children>
                   <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonClic" prefHeight="40.0" prefWidth="36.0" style="-fx-background-color: #ffd8cf;">
-                     <graphic>
-                        <ImageView fitHeight="41.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="save-instagram.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="downloadButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="36.0" style="-fx-background-color: #ffd8cf;" visible="false">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true" translateX="4.0" translateY="5.0">
-                           <image>
-                              <Image url="downloads.png" />
-                           </image>
-                        </ImageView>
-                     </graphic></Button>
-               </children>
-            </VBox>
-         </children>
-    </AnchorPane>
-  </children>
-</VBox>
+                  <!-- <graphic>
+                      <ImageView fitHeight="41.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                         <image>
+                            <Image url="@save-instagram.png" />
+                         </image>
+                      </ImageView>
+                   </graphic>-->
+                </Button>
+                <Button fx:id="downloadButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="36.0" style="-fx-background-color: #ffd8cf;" visible="false">
+                <!-- <graphic>
+                    <ImageView fitHeight="32.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true" translateX="4.0" translateY="5.0">
+                        <image>-->
+                              <!-- <Image url="@downloads.png" /> -->
+                           <!--  </image>-->
+                           <!--  </ImageView>
+                          </graphic></Button>-->
+                    </children>
+                 </VBox>
+              </children>
+         </AnchorPane>
+       </children>
+     </VBox>
