@@ -31,6 +31,9 @@ public class Controler {
         this.vue = new Vue();
         this.model = new Model();
         vue.Firstvue(primaryStage, this);
+        //String str = model.readFileContent(model.selectedFile);
+
+        //System.out.println(str);
         //this.vue.SecondPage(primaryStage,this);
 
         // code qui marche
@@ -53,33 +56,40 @@ public class Controler {
 
     }
 
-    public void handleUploadButtonClick(Button uploadButton, int index) {
+    public void handleUploadButtonClick(Button uploadButton, int index ) {
         uploadButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Sélectionner un fichier à télécharger");
             Stage stage = new Stage();
             File selectedFile = fileChooser.showOpenDialog(stage);
-
             if (selectedFile != null) {
                 //try {
                     // Vérifie si le fichier sélectionné est un fichier texte
                     if (selectedFile.getName().toLowerCase().endsWith(".txt")) {
                         model.addDownloadedFile(selectedFile, index);
+                      // String str = model.readFileContent(model.getDownFile());
 
-                        //System.out.println("Contenu du fichier texte : \n" + content.toString());
-
+                        //System.out.println(str);
                         // Changer l'icône après la vérification du fichier texte
                         Image newImage = new Image(getClass().getResourceAsStream("/icon_txt_green.png"));
                         vue.replaceImageView(uploadButton, newImage);
 
 
                         if(model.verifyDownload()){
-                            System.out.println("if reussi");
+                            System.out.println("if reussi la diff ");
+                            //String str = model.readFileContent(model.getDownFile(0));
+                            //str = model.readFileContent(model.getDownFile(1));
                             try {
+                                model.getDiff();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            //System.out.println(str);
+                           /* try {
                                 redirectToSecondPage();
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
-                            }
+                            }*/
                         }
 
                     } else {
