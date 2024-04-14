@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -25,6 +27,10 @@ public class Controler {
 
     @FXML
     private Button downloadButton;
+    @FXML
+    private TextField originalFileContentLabel;
+    @FXML
+    private TextField editedFileContentLabel;
 
     public Controler(Stage primaryStage) throws Exception {
 
@@ -119,6 +125,12 @@ public class Controler {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../secondview2.fxml"));
         loader.setController(this);
         Parent root = loader.load();
+
+        //originalFileContentLabel.setText(model.getOriginalFileContent());
+        //editedFileContentLabel.setText(model.getEditedFileContent());
+        originalFileContentLabel.setText(model.getOriginalFileContent());
+        editedFileContentLabel.setText(model.getEditedFileContent());
+
         primaryst.setTitle("Interface Utilisateur");
         primaryst.setScene(new Scene(root, 800, 600));
         primaryst.show();

@@ -86,6 +86,12 @@ public class Model {
     public List<File> getDownloadedFiles() {
         return downloadedFiles;
     }*/
+    public String getOriginalFileContent() {
+        return readFileContent(downloadedFiles[0]);
+    }
+    public String getEditedFileContent() {
+        return readFileContent(downloadedFiles[1]);
+    }
 
     // Ajoutez d'autres méthodes nécessaires pour manipuler les fichiers téléchargés selon vos besoins
 }
