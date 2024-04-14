@@ -55,6 +55,14 @@ public class Controler {
         */
 
     }
+    public static Controler createWithStage(Stage primaryStage) {
+        try {
+            return new Controler(primaryStage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public void handleUploadButtonClick(Button uploadButton, int index ) {
         uploadButton.setOnAction(event -> {
@@ -79,17 +87,18 @@ public class Controler {
                             System.out.println("if reussi la diff ");
                             //String str = model.readFileContent(model.getDownFile(0));
                             //str = model.readFileContent(model.getDownFile(1));
-                            try {
+                            /*try {
                                 model.getDiff();
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
-                            }
+                            }*/
                             //System.out.println(str);
-                           /* try {
+                            try {
                                 redirectToSecondPage();
                             } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }*/
+                                //throw new RuntimeException(e);
+                                e.printStackTrace();
+                            }
                         }
 
                     } else {
@@ -105,7 +114,14 @@ public class Controler {
         // Créer la deuxième page avec les boutons et les éléments nécessaires
         // ...
         System.out.println("redirect to 2nd pg");
-        vue.SecondPage(this.primaryst,this); // Afficher la deuxième page
+        //vue.SecondPage(this.primaryst,this); // Afficher la deuxième page
+        //Parent root = FXMLLoader.load(getClass().getResource("../test2.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../secondview2.fxml"));
+        loader.setController(this);
+        Parent root = loader.load();
+        primaryst.setTitle("Interface Utilisateur");
+        primaryst.setScene(new Scene(root, 800, 600));
+        primaryst.show();
     }
 
     @FXML
@@ -117,12 +133,13 @@ public class Controler {
         ImageView imageView = (ImageView) saveButton.getGraphic();
 
         // Modifier l'image associée
-        Image newImage = new Image(getClass().getResourceAsStream("../downloads.png"));
+        Image newImage = new Image(getClass().getResourceAsStream("../bookmark.png"));
         imageView.setImage(newImage);
 
         // Afficher un autre bouton
         downloadButton.setVisible(true);// Assurez-vous que "autreBouton" est bien un autre bouton dans votre scène
     }
+
 
 
 

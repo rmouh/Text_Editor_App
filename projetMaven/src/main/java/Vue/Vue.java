@@ -65,24 +65,8 @@ public class Vue {
         controler.handleUploadButtonClick(uploadOriginalFileButton,0);
         controler.handleUploadButtonClick(uploadEditedFileButton,1);
     }
-    public void loadFXML(Stage primaryStage, Controler controler, String fxmlPath) throws Exception {
-        /*Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-        *//*FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        loader.setController(controler);
-        Parent root = loader.load();
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.show();*//*
 
-        primaryStage.setTitle("Interface Utilisateur");
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.show();*/
-        Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-        // root = FXMLLoader.load(fxmlPath);
-        primaryStage.setTitle("Interface Utilisateur");
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.show();
-    }
-    public void SecondPage ( Stage primaryStage, Controler controler) throws Exception
+   /* public void SecondPage ( Stage primaryStage, Controler controler) throws Exception
     {
         System.out.println("2nd page");
         Parent root = FXMLLoader.load(getClass().getResource("../secondview2.fxml"));
@@ -91,7 +75,7 @@ public class Vue {
         primaryStage.show();
         //loadFXML(primaryStage,controler,"../test.fxml");
 
-    }
+    }*/
     public Button createUploadButton(String buttonText, double width, int n) {
         Button uploadButton = new Button(buttonText);
         uploadButton.setPrefWidth(width);
