@@ -9,9 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -28,9 +31,17 @@ public class Controler {
     @FXML
     private Button downloadButton;
     @FXML
-    private TextField originalFileContentLabel;
+    private TextArea originalFileContentLabel;
     @FXML
-    private TextField editedFileContentLabel;
+    private TextArea editedFileContentLabel;
+    @FXML
+    private Button editButton;
+
+    @FXML
+    private Button commentButton;
+
+    @FXML
+    private Button deleteButton;
 
     public Controler(Stage primaryStage) throws Exception {
 
@@ -69,6 +80,42 @@ public class Controler {
             return null;
         }
     }
+
+    @FXML
+    private void initialize() {
+        // Désactiver les boutons initialement
+        editButton.setDisable(true);
+        commentButton.setDisable(true);
+        deleteButton.setDisable(true);
+
+        // Désactiver l'édition initialement
+        //editedFileContentLabel.setEditable(false);
+
+        // Ajouter des gestionnaires d'événements pour activer/désactiver les boutons en fonction de la sélection dans le TextArea
+        editedFileContentLabel.selectedTextProperty().addListener((observable, oldValue, newValue) -> {
+            boolean isTextSelected = !newValue.isEmpty();
+            //editButton.setDisable(!isTextSelected);
+            commentButton.setDisable(!isTextSelected);
+            deleteButton.setDisable(!isTextSelected);
+        });
+
+        // Ajouter un gestionnaire d'événements pour le bouton d'édition
+        editButton.setOnAction(event -> {
+            // Activer l'édition
+            editedFileContentLabel.setEditable(true);
+        });
+
+        // Ajouter un gestionnaire d'événements pour le bouton de suppression
+        deleteButton.setOnAction(event -> {
+            // Supprimer le contenu sélectionné
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(editedFileContentLabel.getSelectedText());
+            clipboard.setContent(content);
+            editedFileContentLabel.replaceSelection("");
+        });
+    }
+
 
     public void handleUploadButtonClick(Button uploadButton, int index ) {
         uploadButton.setOnAction(event -> {
