@@ -84,7 +84,7 @@ public class Controler {
     @FXML
     private void initialize() {
         // Désactiver les boutons initialement
-        editButton.setDisable(true);
+        editButton.setDisable(false);
         commentButton.setDisable(true);
         deleteButton.setDisable(true);
 
@@ -100,22 +100,54 @@ public class Controler {
         });
 
         // Ajouter un gestionnaire d'événements pour le bouton d'édition
-        editButton.setOnAction(event -> {
+       /* editButton.setOnAction(event -> {
             // Activer l'édition
             editedFileContentLabel.setEditable(true);
-        });
+        });*/
+        editButton.setOnAction(event -> handleEditButtonClicked());
 
         // Ajouter un gestionnaire d'événements pour le bouton de suppression
-        deleteButton.setOnAction(event -> {
+        // delete selected text
+
+        /*deleteButton.setOnAction(event -> {
             // Supprimer le contenu sélectionné
             Clipboard clipboard = Clipboard.getSystemClipboard();
             ClipboardContent content = new ClipboardContent();
             content.putString(editedFileContentLabel.getSelectedText());
             clipboard.setContent(content);
+            editedFileContentLabel.setEditable(true);
             editedFileContentLabel.replaceSelection("");
-        });
-    }
+            editedFileContentLabel.setEditable(false);
+            System.out.println("Suppppp");
+            String str = model.getEditedFileContent();
+            System.out.println(str);
+        });*/
+        deleteButton.setOnAction(event -> {
+            int indexStart = 0; //initialize variables
+            int indexEnd = 0;
 
+
+            for(String line : editedFileContentLabel.getText().split("\n")){
+                if(line.contains("abc")) { //change this to whatever you need
+                    indexStart = editedFileContentLabel.getText().indexOf(line.charAt(0));
+                    indexEnd = indexStart + line.length()-1;
+                }
+
+                editedFileContentLabel.deleteText(indexStart, indexEnd); //Delete between indexes
+            }
+            String str = model.getEditedFileContent();
+            System.out.println(str);
+        });
+
+    }
+    private void handleEditButtonClicked() {
+        // Activez la modification du texte dans la zone de texte
+        editedFileContentLabel.setEditable(true);
+        // Placez le curseur à la fin du texte pour commencer à écrire
+        editedFileContentLabel.positionCaret(editedFileContentLabel.getLength());
+        // Donnez le focus à la zone de texte pour commencer à écrire directement
+        editedFileContentLabel.requestFocus();
+    }
 
     public void handleUploadButtonClick(Button uploadButton, int index ) {
         uploadButton.setOnAction(event -> {
@@ -128,9 +160,9 @@ public class Controler {
                     // Vérifie si le fichier sélectionné est un fichier texte
                     if (selectedFile.getName().toLowerCase().endsWith(".txt")) {
                         model.addDownloadedFile(selectedFile, index);
-                      // String str = model.readFileContent(model.getDownFile());
+                      String str = (index == 0) ? model.getOriginalFileContent() : model.getEditedFileContent();
 
-                        //System.out.println(str);
+                        System.out.println(str);
                         // Changer l'icône après la vérification du fichier texte
                         Image newImage = new Image(getClass().getResourceAsStream("/icon_txt_green.png"));
                         vue.replaceImageView(uploadButton, newImage);
@@ -169,7 +201,7 @@ public class Controler {
         System.out.println("redirect to 2nd pg");
         //vue.SecondPage(this.primaryst,this); // Afficher la deuxième page
         //Parent root = FXMLLoader.load(getClass().getResource("../test2.fxml"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../secondview2.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../secondview.fxml"));
         loader.setController(this);
         Parent root = loader.load();
 
