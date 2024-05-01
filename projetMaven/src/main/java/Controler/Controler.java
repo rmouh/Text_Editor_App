@@ -116,29 +116,93 @@ public class Controler {
             content.putString(editedFileContentLabel.getSelectedText());
             clipboard.setContent(content);
             editedFileContentLabel.setEditable(true);
+            editedFileContentLabel.requestFocus();
+            if (!editedFileContentLabel.isFocused()) {
+                System.out.println("Please select text in the label before deleting.");
+                return;
+            }
             editedFileContentLabel.replaceSelection("");
             editedFileContentLabel.setEditable(false);
+            //editedFileContentLabel.requestFocus();
             System.out.println("Suppppp");
             String str = model.getEditedFileContent();
             System.out.println(str);
         });*/
-        deleteButton.setOnAction(event -> {
-            int indexStart = 0; //initialize variables
-            int indexEnd = 0;
 
-
-            for(String line : editedFileContentLabel.getText().split("\n")){
-                if(line.contains("abc")) { //change this to whatever you need
-                    indexStart = editedFileContentLabel.getText().indexOf(line.charAt(0));
-                    indexEnd = indexStart + line.length()-1;
-                }
-
-                editedFileContentLabel.deleteText(indexStart, indexEnd); //Delete between indexes
+        /*deleteButton.setOnAction(event -> {
+            // Check if label has focus before deleting
+            editedFileContentLabel.requestFocus();
+            if (!editedFileContentLabel.isFocused()) {
+                System.out.println("Please select text in the label before deleting.");
+                // Optionally, disable delete button or display an error message in the UI
+                return;
             }
+
+            // Set editable only if focus is confirmed
+            //editedFileContentLabel.requestFocus();
+            editedFileContentLabel.setEditable(true);
+
+            String selectedText = editedFileContentLabel.getSelectedText();
+
+            // Validate selected text (optional, but good practice)
+            if (!selectedText.isEmpty()) {
+                editedFileContentLabel.replaceSelection("");
+                System.out.println("Supprimé : " + selectedText);
+            } else {
+                System.out.println("Aucun texte sélectionné pour supprimer.");
+            }
+
+            editedFileContentLabel.setEditable(false);
+
             String str = model.getEditedFileContent();
             System.out.println(str);
-        });
+        });*/
 
+
+        deleteButton.setOnAction(event -> handleDeleteButtonClicked());
+
+
+    }
+
+    private void handleDeleteButtonClicked() {
+        editedFileContentLabel.requestFocus();
+        if (!editedFileContentLabel.isFocused()) {
+            System.out.println("Please select text in the label before deleting.");
+            return;
+        }
+        editedFileContentLabel.setEditable(true);
+        // Récupérer le texte sélectionné
+        String selectedText = editedFileContentLabel.getSelectedText();
+
+        // Si du texte est sélectionné, le supprimer
+        if (!selectedText.isEmpty()) {
+            // Supprimer le texte sélectionné de la zone de texte
+            int startIndex = editedFileContentLabel.getSelection().getStart();
+            int endIndex = editedFileContentLabel.getSelection().getEnd();
+
+            String st = editedFileContentLabel.getText(startIndex, endIndex);
+            System.out.println("Texte sélectionneee : " + st);
+
+            if (startIndex >= 0 && endIndex >= startIndex && endIndex <= editedFileContentLabel.getText().length()) {
+                editedFileContentLabel.deleteText(startIndex, endIndex);
+                editedFileContentLabel.setEditable(false);
+                // Mettre à jour le fichier avec le texte modifié
+                String newText = editedFileContentLabel.getText();
+                model.updateContent(newText);
+            } else {
+                // Gérer la condition d'erreur (par exemple, afficher un message d'erreur ou désactiver la fonction de suppression)
+                System.out.println("Invalid index range for deletion.");
+            }
+
+            System.out.println("Supprimé : " + selectedText);
+        } else {
+            System.out.println("Aucun texte sélectionné pour supprimer.");
+        }
+
+        String str = model.getEditedContent();
+        System.out.println("edited content"+str);
+        String str2 = model.getEditedFileContent();
+        System.out.println("edited file content"+str2);
     }
     private void handleEditButtonClicked() {
         // Activez la modification du texte dans la zone de texte
@@ -158,9 +222,15 @@ public class Controler {
             if (selectedFile != null) {
                 //try {
                     // Vérifie si le fichier sélectionné est un fichier texte
+                // ajout test
                     if (selectedFile.getName().toLowerCase().endsWith(".txt")) {
-                        model.addDownloadedFile(selectedFile, index);
-                      String str = (index == 0) ? model.getOriginalFileContent() : model.getEditedFileContent();
+                        try {
+                            model.addDownloadedFile(selectedFile, index);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        //String str = (index == 0) ? model.getOriginalFileContent() : model.getEditedFileContent();
+                        String str = (index == 0) ? model.getOriginalContent() : model.getEditedContent();
 
                         System.out.println(str);
                         // Changer l'icône après la vérification du fichier texte
