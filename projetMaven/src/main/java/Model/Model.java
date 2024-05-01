@@ -86,6 +86,21 @@ public class Model {
             System.out.println("|" + row.getOldLine() + "|" + row.getNewLine()+"|");
         }
     }
+    public String getEditedContentDiff() throws IOException {
+        DiffRowGenerator generator = DiffRowGenerator.create()
+                .showInlineDiffs(true)
+                .inlineDiffByWord(true)
+                .oldTag(f -> "~")
+                .newTag(f -> "")
+                .build();
+        List<DiffRow> rows = generator.generateDiffRows(original,edited);
+        StringBuilder content = new StringBuilder();
+        for (DiffRow row : rows) {
+            content.append(row.getOldLine() + "|" + row.getNewLine()+"|\n");
+        }
+        System.out.println(content.toString());
+        return content.toString();
+    }
 
     /*public void addDownloadedFile(File file) {
         downloadedFiles.add(file);

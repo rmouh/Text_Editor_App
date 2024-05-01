@@ -5,26 +5,31 @@ import Vue.Vue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class Controler {
    private Model model;
     private Vue vue;
     Stage primaryst;
+    //List<Comment> comments = new ArrayList<>();
+    List<Comment> comments = new ArrayList<Comment>();
     @FXML
     private Button saveButton;
 
@@ -48,28 +53,7 @@ public class Controler {
         this.vue = new Vue();
         this.model = new Model();
         vue.Firstvue(primaryStage, this);
-        //String str = model.readFileContent(model.selectedFile);
-
-        //System.out.println(str);
-        //this.vue.SecondPage(primaryStage,this);
-
-        // code qui marche
-        /*Parent root = FXMLLoader.load(getClass().getResource("../test.fxml"));
-        // root = FXMLLoader.load(fxmlPath);
-        primaryStage.setTitle("Interface Utilisateur");
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.show();*/
-
-
         this.primaryst=primaryStage;
-       /*Scene scene = new Scene(this.getLayout(), 600, 400);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        //primaryStage.setScene(vue.Scenegetter());
-        //primaryStage.show();
-
-
-        */
 
     }
     public static Controler createWithStage(Stage primaryStage) {
@@ -93,6 +77,9 @@ public class Controler {
 
         // Ajouter des gestionnaires d'événements pour activer/désactiver les boutons en fonction de la sélection dans le TextArea
         editedFileContentLabel.selectedTextProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("new value : " + newValue);
+            System.out.println("newvalue.empty : " + newValue.isEmpty());
+            System.out.println("oldValue : " + oldValue);
             boolean isTextSelected = !newValue.isEmpty();
             //editButton.setDisable(!isTextSelected);
             commentButton.setDisable(!isTextSelected);
@@ -106,63 +93,136 @@ public class Controler {
         });*/
         editButton.setOnAction(event -> handleEditButtonClicked());
 
-        // Ajouter un gestionnaire d'événements pour le bouton de suppression
-        // delete selected text
-
-        /*deleteButton.setOnAction(event -> {
-            // Supprimer le contenu sélectionné
-            Clipboard clipboard = Clipboard.getSystemClipboard();
-            ClipboardContent content = new ClipboardContent();
-            content.putString(editedFileContentLabel.getSelectedText());
-            clipboard.setContent(content);
-            editedFileContentLabel.setEditable(true);
-            editedFileContentLabel.requestFocus();
-            if (!editedFileContentLabel.isFocused()) {
-                System.out.println("Please select text in the label before deleting.");
-                return;
-            }
-            editedFileContentLabel.replaceSelection("");
-            editedFileContentLabel.setEditable(false);
-            //editedFileContentLabel.requestFocus();
-            System.out.println("Suppppp");
-            String str = model.getEditedFileContent();
-            System.out.println(str);
-        });*/
-
-        /*deleteButton.setOnAction(event -> {
-            // Check if label has focus before deleting
-            editedFileContentLabel.requestFocus();
-            if (!editedFileContentLabel.isFocused()) {
-                System.out.println("Please select text in the label before deleting.");
-                // Optionally, disable delete button or display an error message in the UI
-                return;
-            }
-
-            // Set editable only if focus is confirmed
-            //editedFileContentLabel.requestFocus();
-            editedFileContentLabel.setEditable(true);
-
-            String selectedText = editedFileContentLabel.getSelectedText();
-
-            // Validate selected text (optional, but good practice)
-            if (!selectedText.isEmpty()) {
-                editedFileContentLabel.replaceSelection("");
-                System.out.println("Supprimé : " + selectedText);
-            } else {
-                System.out.println("Aucun texte sélectionné pour supprimer.");
-            }
-
-            editedFileContentLabel.setEditable(false);
-
-            String str = model.getEditedFileContent();
-            System.out.println(str);
-        });*/
-
 
         deleteButton.setOnAction(event -> handleDeleteButtonClicked());
+        /*commentButton.setOnAction(event -> {
+            // Ouvrir une boîte de dialogue pour saisir le commentaire
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Ajouter un commentaire");
+            dialog.setHeaderText("Saisissez votre commentaire :");
+            dialog.setContentText("Commentaire :");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                String commentaire = result.get();
+
+                // Créer une étiquette avec l'icône de commentaire
+                Label commentaireLabel = new Label();
+                commentaireLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("../chat.png"))));
+                commentaireLabel.setTooltip(new Tooltip("Commentaire : " + commentaire));
+
+
+                int startIndex = editedFileContentLabel.getSelection().getStart();
+                int endIndex = editedFileContentLabel.getSelection().getEnd();
+
+                String selectedText = editedFileContentLabel.getText(startIndex, endIndex);
+
+                // Positionner l'étiquette à côté du texte sélectionné
+                Bounds bounds = editedFileContentLabel.localToScreen(editedFileContentLabel.getLayoutBounds());
+                commentaireLabel.setLayoutX(bounds.getMinX());
+                commentaireLabel.setLayoutY(bounds.getMinY() - commentaireLabel.getHeight());
+
+                // Ajouter l'étiquette à la scène
+                // Assurez-vous d'avoir accès à la scène ou à un conteneur approprié ici
+                // Par exemple, vous pouvez ajouter l'étiquette à un Pane ou directement à la scène racine
+                ((Pane) this.primaryst.getScene().getRoot()).getChildren().add(commentaireLabel);
+
+            }
+        });*/
+        commentButton.setOnAction(event -> {
+            // Check if text is selected
+            if (!editedFileContentLabel.getSelectedText().isEmpty()) {
+
+                // Open a dialog box for comment input
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Ajouter un commentaire");
+                dialog.setHeaderText("Saisissez votre commentaire :");
+                dialog.setContentText("Commentaire :");
+
+                Optional<String> result = dialog.showAndWait();
+                if (result.isPresent()) {
+                    String commentaire = result.get();
+
+
+
+                    Label commentaireLabel = new Label();
+                    commentaireLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("../chat.png"))));
+
+                    // Create a comment object and add it to the list
+                    Comment comment = new Comment(commentaire, commentaireLabel);
+                    comments.add(comment);
+
+                    commentaireLabel.setOnMouseClicked(e -> {
+                        Comment comment2 = comments.stream()
+                                .filter(c -> c.getLabel() == commentaireLabel)
+                                .findFirst()
+                                .orElse(null);
+
+                        if (comment2 != null) {
+                            // Display comment text using a Tooltip
+                            Tooltip tooltip = new Tooltip("Commentaire : " + comment2.getText());
+                            int X = (int) editedFileContentLabel.getLayoutX() + editedFileContentLabel.getSelection().getEnd();
+                            int Y = (int) ((int) editedFileContentLabel.getLayoutY() + e.getY());
+                            tooltip.show(this.primaryst, X, Y + 10);
+
+                        }
+                    });
+
+                    if (editedFileContentLabel.getParent() instanceof StackPane) {
+                        StackPane stackPane = (StackPane) editedFileContentLabel.getParent();
+                        stackPane.getChildren().add(commentaireLabel);
+                    } else {
+                        System.out.println("Parent of editedFileContentLabel is not a StackPane.");
+                    }
+
+                    // Assuming editedFileContentLabel is the first TextArea in the first StackPane:
+                    /*editedFileContentLabel.getParent().getChildrenUnmodifiable().stream()
+                            .filter(node -> node instanceof StackPane)
+                            .map(node -> (StackPane) node)
+                            .findFirst()
+                            .ifPresent(stackPane -> {
+                                stackPane.getChildren().add(commentaireLabel);
+                            });*/
+
+                }
+            }
+        });
+        /*commentButton.setOnAction(event -> {
+            // Check if text is selected
+            if (!editedFileContentLabel.getSelectedText().isEmpty()) {
+
+                // Open a dialog box for comment input
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Ajouter un commentaire");
+                dialog.setHeaderText("Saisissez votre commentaire :");
+                dialog.setContentText("Commentaire :");
+
+                Optional<String> result = dialog.showAndWait();
+                if (result.isPresent()) {
+                    String commentaire = result.get();
+
+                    int startIndex = editedFileContentLabel.getSelection().getStart();
+                    int endIndex = editedFileContentLabel.getSelection().getEnd();
+                    // Create a label with the comment icon
+                    Label commentaireLabel = new Label();
+                    commentaireLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("../chat.png"))));
+                    Tooltip tooltip = new Tooltip("Commentaire : " + commentaire);
+                    commentaireLabel.setTooltip(tooltip);
+                    tooltip.show(this.primaryst, 100, 100);
+
+                    // Create IndexedComment object and add it to the list
+                    comments.add(new Comment(commentaire,commentaireLabel));
+                }
+            }
+        });*/
+
+
 
 
     }
+
+
+
 
     private void handleDeleteButtonClicked() {
         editedFileContentLabel.requestFocus();
@@ -230,8 +290,13 @@ public class Controler {
                             throw new RuntimeException(e);
                         }
                         //String str = (index == 0) ? model.getOriginalFileContent() : model.getEditedFileContent();
-                        String str = (index == 0) ? model.getOriginalContent() : model.getEditedContent();
-
+                        //String str = (index == 0) ? model.getOriginalContent() : model.getEditedContent();
+                        String str = null;
+                        try {
+                            str = (index == 0) ? model.getOriginalContent() : model.getEditedContentDiff();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         System.out.println(str);
                         // Changer l'icône après la vérification du fichier texte
                         Image newImage = new Image(getClass().getResourceAsStream("/icon_txt_green.png"));
@@ -278,7 +343,8 @@ public class Controler {
         //originalFileContentLabel.setText(model.getOriginalFileContent());
         //editedFileContentLabel.setText(model.getEditedFileContent());
         originalFileContentLabel.setText(model.getOriginalFileContent());
-        editedFileContentLabel.setText(model.getEditedFileContent());
+        //editedFileContentLabel.setText(model.getEditedFileContent());
+        editedFileContentLabel.setText(model.getEditedContentDiff());
 
         primaryst.setTitle("Interface Utilisateur");
         primaryst.setScene(new Scene(root, 800, 600));
@@ -301,6 +367,25 @@ public class Controler {
         downloadButton.setVisible(true);// Assurez-vous que "autreBouton" est bien un autre bouton dans votre scène
     }
 
+
+
+    class Comment {
+        private String text;
+        private Label label;
+
+        public Comment(String text, Label label) {
+            this.text = text;
+            this.label = label;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public Label getLabel() {
+            return label;
+        }
+    }
 
 
 
