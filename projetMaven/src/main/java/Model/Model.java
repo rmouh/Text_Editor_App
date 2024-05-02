@@ -5,10 +5,7 @@ import com.github.difflib.patch.Patch;
 import com.github.difflib.text.DiffRow;
 import com.github.difflib.text.DiffRowGenerator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -56,8 +53,8 @@ public class Model {
         }
         return content.toString();
     }
-    public void getDiff() throws IOException {
-       /* //build simple lists of the lines of the two testfiles
+    /*public void getDiff() throws IOException {
+        //build simple lists of the lines of the two testfiles
         List<String> original = Files.readAllLines(downloadedFiles[0].toPath());
         List<String> revised = Files.readAllLines(downloadedFiles[1].toPath());
 
@@ -68,7 +65,7 @@ public class Model {
         for (AbstractDelta<String> delta : patch.getDeltas()) {
             System.out.println(delta);
         }
-        */
+
         //List<String> original = Files.readAllLines(downloadedFiles[0].toPath());
         //List<String> revised = Files.readAllLines(downloadedFiles[1].toPath());
 
@@ -85,7 +82,7 @@ public class Model {
         for (DiffRow row : rows) {
             System.out.println("|" + row.getOldLine() + "|" + row.getNewLine()+"|");
         }
-    }
+    }*/
     public String getEditedContentDiff() throws IOException {
         DiffRowGenerator generator = DiffRowGenerator.create()
                 .showInlineDiffs(true)
@@ -98,6 +95,7 @@ public class Model {
         for (DiffRow row : rows) {
             content.append(row.getOldLine() + "|" + row.getNewLine()+"|\n");
         }
+        //this.updateContent(newText);
         System.out.println(content.toString());
         return content.toString();
     }
@@ -143,5 +141,30 @@ public class Model {
         edited = Arrays.asList(newText.split("\n"));
     }
 
-    // Ajoutez d'autres méthodes nécessaires pour manipuler les fichiers téléchargés selon vos besoins
+    public void updateFileFromEditedList(int index) {
+        // Vérifiez d'abord si le fichier correspondant existe
+        if (downloadedFiles != null && index >= 0 && index < downloadedFiles.length) {
+            File fileToUpdate = downloadedFiles[index];
+
+            // Vérifiez si la liste éditée est valide
+            if (edited != null) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToUpdate))) {
+                    // Écrivez chaque ligne de la liste éditée dans le fichier
+                    for (String line : edited) {
+                        writer.write(line);
+                        writer.newLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Gérez l'exception selon votre logique d'application
+                }
+            } else {
+                System.out.println("La liste éditée est vide ou non initialisée.");
+                // Gérez cette condition selon votre logique d'application
+            }
+        } else {
+            System.out.println("Index de fichier invalide ou fichier non téléchargé.");
+            // Gérez cette condition selon votre logique d'application
+        }
+    }
 }

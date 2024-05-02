@@ -76,9 +76,9 @@ public class Controler {
 
         // Ajouter des gestionnaires d'événements pour activer/désactiver les boutons en fonction de la sélection dans le TextArea
         editedFileContentLabel.selectedTextProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("new value : " + newValue);
+           /* System.out.println("new value : " + newValue);
             System.out.println("newvalue.empty : " + newValue.isEmpty());
-            System.out.println("oldValue : " + oldValue);
+            System.out.println("oldValue : " + oldValue);*/
             boolean isTextSelected = !newValue.isEmpty();
             //editButton.setDisable(!isTextSelected);
             commentButton.setDisable(!isTextSelected);
@@ -310,6 +310,56 @@ public class Controler {
 
         // Si du texte est sélectionné, le supprimer
         if (!selectedText.isEmpty()) {
+            // Obtenez les indices de début et de fin de la sélection
+            int startIndex = editedFileContentLabel.getSelection().getStart();
+            int endIndex = editedFileContentLabel.getSelection().getEnd();
+            int length = editedFileContentLabel.getLength();
+            String text = editedFileContentLabel.getText();
+
+            // Inverser les indices si la sélection est de droite à gauche
+            if (startIndex > endIndex) {
+                int temp = startIndex;
+                startIndex = endIndex;
+                endIndex = temp;
+            }
+            // Supprimer le texte sélectionné de la zone de texte
+            if (startIndex >= 0 && endIndex > startIndex && endIndex <= length) {
+                model.updateContent(editedFileContentLabel.getText());
+                editedFileContentLabel.setText(text);
+                editedFileContentLabel.deleteText(startIndex, endIndex);
+                // Mettre à jour le fichier avec le texte modifié
+                String newText = editedFileContentLabel.getText();
+                editedFileContentLabel.setEditable(false);
+                model.updateContent(newText);
+
+                System.out.println("Contenu du modèle mis à jour DELETE : " + model.getEditedContent());
+
+                //recupere le contunu du file modifier apartir de la liste
+                /*String str = model.getEditedContent();
+                System.out.println("*******************edited file content from array ");
+                System.out.println("[  "+str+"  ]");
+                //recupere le contunu du file modifier aparir du fichier
+                System.out.println("*******************edited file content from File ");
+                String str2 = model.getEditedFileContent();
+                System.out.println("[  "+str2+"  ]");*/
+               /* System.out.println("[  APRES LA MIS A JOUR   ]");
+
+                str = model.getEditedContent();
+                System.out.println("*******************edited file content from array ");
+                System.out.println("[  "+str+"  ]");
+                //recupere le contunu du file modifier aparir du fichier
+                System.out.println("*******************edited file content from File ");
+                 str2 = model.getEditedFileContent();
+                System.out.println("[  "+str2+"  ]");
+
+                */
+            } else {
+                // Gérer la condition d'erreur (par exemple, afficher un message d'erreur ou désactiver la fonction de suppression)
+                System.out.println("Invalid index range for deletion.");
+            }
+
+
+        /*if (!selectedText.isEmpty()) {
             // Supprimer le texte sélectionné de la zone de texte
             int startIndex = editedFileContentLabel.getSelection().getStart();
             int endIndex = editedFileContentLabel.getSelection().getEnd();
@@ -326,17 +376,20 @@ public class Controler {
             } else {
                 // Gérer la condition d'erreur (par exemple, afficher un message d'erreur ou désactiver la fonction de suppression)
                 System.out.println("Invalid index range for deletion.");
-            }
+            }*/
 
-            System.out.println("Supprimé : " + selectedText);
+            System.out.println("-------------------->le texte Supprimé : " + selectedText);
         } else {
             System.out.println("Aucun texte sélectionné pour supprimer.");
         }
-
-        String str = model.getEditedContent();
+        //recupere le contunu du file modifier apartir de la liste
+        /*String str = model.getEditedContent();
+        System.out.println("*******************edited file content from array ");
         System.out.println("edited content"+str);
+        //recupere le contunu du file modifier aparir du fichier
+        System.out.println("*******************edited file content from File ");
         String str2 = model.getEditedFileContent();
-        System.out.println("edited file content"+str2);
+        System.out.println("edited file content"+str2);*/
     }
     private void handleEditButtonClicked() {
         // Activez la modification du texte dans la zone de texte
@@ -345,6 +398,14 @@ public class Controler {
         editedFileContentLabel.positionCaret(editedFileContentLabel.getLength());
         // Donnez le focus à la zone de texte pour commencer à écrire directement
         editedFileContentLabel.requestFocus();
+
+        // Écoutez les changements dans le contenu de la zone de texte
+        editedFileContentLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Mettez à jour le modèle avec le nouveau texte
+            model.updateContent(newValue);
+            // Imprimez le nouveau contenu du modèle (incluant les modifications)
+            System.out.println("Contenu du modèle mis à jour ADD : " + model.getEditedContent());
+        });
     }
 
     public void handleUploadButtonClick(Button uploadButton, int index ) {
