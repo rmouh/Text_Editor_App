@@ -107,6 +107,18 @@
    <top>
       <HBox prefHeight="58.0" prefWidth="641.0" BorderPane.alignment="CENTER">
          <children>
+            <Button fx:id="exitBtn" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="47.0" style="-fx-background-color: #ffd8cf;">
+               <graphic>
+                  <ImageView fitHeight="42.0" fitWidth="39.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@go-back.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+               </graphic>
+            </Button>
             <Label alignment="CENTER" prefHeight="58.0" prefWidth="400.0" text="Edited File" HBox.hgrow="ALWAYS" />
             <Label alignment="CENTER" prefHeight="73.0" prefWidth="392.0" text="Original File" HBox.hgrow="ALWAYS" />
          </children>

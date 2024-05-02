@@ -18,6 +18,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,8 @@ public class Controler {
     List<Comment> comments = new ArrayList<Comment>();
     @FXML
     private Button saveButton;
-
+    @FXML
+    private Button exitBtn;
     @FXML
     private Button downloadButton;
     @FXML
@@ -72,6 +75,20 @@ public class Controler {
         editButton.setDisable(false);
         commentButton.setDisable(true);
         deleteButton.setDisable(true);
+        exitBtn.setDisable(false);
+        exitBtn.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation de sortie");
+            alert.setHeaderText("Êtes-vous sûr de vouloir quitter ?");
+            alert.setContentText("En quittant sans enregistrer, vous perdrez les modifications apportées au fichier.");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                this.vue = new Vue();
+                vue.Firstvue(primaryst,this);
+            }
+
+        });
 
         // Désactiver l'édition initialement
         //editedFileContentLabel.setEditable(false);
@@ -84,12 +101,45 @@ public class Controler {
             boolean isTextSelected = !newValue.isEmpty();
             if(isTextSelected)
             {
-                System.out.println("text selected");
+
+                System.out.println("Debut selectionement ");
+
+
                 //recuperer la position de la selection
-                posSelectionX = editedFileContentLabel.getSelection().getStart() + editedFileContentLabel.getLength();
-                posSelectionY = editedFileContentLabel.getTranslateY();
-                System.out.println("X : "+posSelectionX);
-                System.out.println("Y : "+posSelectionY);
+                /*int caretPosition = editedFileContentLabel.getSelection().getStart();
+                int lineNumber = 1;
+                for (int i = 0; i < caretPosition; i++) {
+                    if (editedFileContentLabel.getText().charAt(i) == '\n') {
+                        lineNumber++;
+                    }
+                }
+                */
+                int lineNumber = 1;
+                int caretPosition = editedFileContentLabel.getCaretPosition();
+                int selectionStart = editedFileContentLabel.getSelection().getStart();
+                int charPositionInLine = 0;
+
+                int i = selectionStart - 1;
+                while (i >= 0 && editedFileContentLabel.getText().charAt(i) != '\n') {
+                    i--;
+                    charPositionInLine++;
+                }
+                lineNumber = 1;
+                if (i >= 0) {
+                    charPositionInLine++; // Pour compenser le saut de ligne
+                }
+                for (int j = 0; j < caretPosition; j++) {
+                    if (editedFileContentLabel.getText().charAt(j) == '\n') {
+                        lineNumber++;
+                    }
+                }
+                System.out.println("les positions ");
+                System.out.println("Ligne: " + lineNumber);
+                System.out.println("Position dans la ligne: " + charPositionInLine);
+                posSelectionX = charPositionInLine*11-20;
+                posSelectionY = lineNumber*17.5 -20;
+                //System.out.println("X : "+posSelectionX);
+                //System.out.println("Y : "+posSelectionY);
             }
             else
                 System.out.println("text not selected");
@@ -99,104 +149,7 @@ public class Controler {
         });
 
         editButton.setOnAction(event -> handleEditButtonClicked());
-
-
         deleteButton.setOnAction(event -> handleDeleteButtonClicked());
-        /*commentButton.setOnAction(event -> {
-            // Ouvrir une boîte de dialogue pour saisir le commentaire
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Ajouter un commentaire");
-            dialog.setHeaderText("Saisissez votre commentaire :");
-            dialog.setContentText("Commentaire :");
-
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent()) {
-                String commentaire = result.get();
-
-                // Créer une étiquette avec l'icône de commentaire
-                Label commentaireLabel = new Label();
-                commentaireLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("../chat.png"))));
-                commentaireLabel.setTooltip(new Tooltip("Commentaire : " + commentaire));
-
-
-                int startIndex = editedFileContentLabel.getSelection().getStart();
-                int endIndex = editedFileContentLabel.getSelection().getEnd();
-
-                String selectedText = editedFileContentLabel.getText(startIndex, endIndex);
-
-                // Positionner l'étiquette à côté du texte sélectionné
-                Bounds bounds = editedFileContentLabel.localToScreen(editedFileContentLabel.getLayoutBounds());
-                commentaireLabel.setLayoutX(bounds.getMinX());
-                commentaireLabel.setLayoutY(bounds.getMinY() - commentaireLabel.getHeight());
-
-                // Ajouter l'étiquette à la scène
-                // Assurez-vous d'avoir accès à la scène ou à un conteneur approprié ici
-                // Par exemple, vous pouvez ajouter l'étiquette à un Pane ou directement à la scène racine
-                ((Pane) this.primaryst.getScene().getRoot()).getChildren().add(commentaireLabel);
-
-            }
-        });*/
-       /* commentButton.setOnAction(event -> {
-            // Check if text is selected
-            if (!editedFileContentLabel.getSelectedText().isEmpty()) {
-
-                // Open a dialog box for comment input
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Ajouter un commentaire");
-                dialog.setHeaderText("Saisissez votre commentaire :");
-                dialog.setContentText("Commentaire :");
-
-                Optional<String> result = dialog.showAndWait();
-                if (result.isPresent()) {
-                    String commentaire = result.get();
-
-
-
-                    Label commentaireLabel = new Label();
-                    commentaireLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("../chat.png"))));
-
-                    // Create a comment object and add it to the list
-                    Comment comment = new Comment(commentaire, commentaireLabel);
-                    comments.add(comment);
-
-                    commentaireLabel.setOnMouseClicked(e -> {
-                        Comment comment2 = comments.stream()
-                                .filter(c -> c.getLabel() == commentaireLabel)
-                                .findFirst()
-                                .orElse(null);
-
-                        if (comment2 != null) {
-                            // Display comment text using a Tooltip
-                            Tooltip tooltip = new Tooltip("Commentaire : " + comment2.getText());
-                            int X = (int) editedFileContentLabel.getLayoutX() + editedFileContentLabel.getSelection().getEnd();
-                            int Y = (int) ((int) editedFileContentLabel.getLayoutY() + e.getY());
-                            tooltip.show(this.primaryst, X, Y + 10);
-
-                        }
-
-
-                    });
-
-                    if (editedFileContentLabel.getParent() instanceof StackPane) {
-                        StackPane stackPane = (StackPane) editedFileContentLabel.getParent();
-                        stackPane.getChildren().add(commentaireLabel);
-                    } else {
-                        System.out.println("Parent of editedFileContentLabel is not a StackPane.");
-                    }
-
-                    // Assuming editedFileContentLabel is the first TextArea in the first StackPane:
-                    *//*editedFileContentLabel.getParent().getChildrenUnmodifiable().stream()
-                            .filter(node -> node instanceof StackPane)
-                            .map(node -> (StackPane) node)
-                            .findFirst()
-                            .ifPresent(stackPane -> {
-                                stackPane.getChildren().add(commentaireLabel);
-                            });*//*
-
-                }
-            }
-        });*/
-
         commentButton.setOnAction(event -> {
             // Check if text is selected
             if (!editedFileContentLabel.getSelectedText().isEmpty()) {
@@ -213,31 +166,18 @@ public class Controler {
                     // Create a custom CommentNode for image and tooltip
                     Image commentImage = new Image(getClass().getResourceAsStream("../chat.png"));
                     CommentNode commentNode = new CommentNode(commentaire, commentImage);
+                    CommentNode commentNode2 = new CommentNode(commentaire, commentImage);
 
-                    // Calculate position based on selection end position in the TextArea
-                    /*int X = editedFileContentLabel.getSelection().getEnd();
-                    int Y = editedFileContentLabel.getSelection().;
-                    // print X Y
-                    System.out.println("X : "+X);
-                    System.out.println("Y : "+Y);*/
 
-                    //int X = (int) editedFileContentLabel.getLayoutX() + editedFileContentLabel.getSelection().getEnd()+10;
-                    //int X = (int) (bounds.getMaxX() + 10);
-                    //int Y = (int) (bounds.getMaxY() + 10);
-                    //int Y = (int) editedFileContentLabel.get + 10;//editedFileContentLabel.getSelection().getEnd();
-                    /*int selectionEnd = editedFileContentLabel.getSelection().getEnd();
-                    Bounds bounds = editedFileContentLabel.getLayoutBounds();
-                    int endX = (int) ((int) bounds.getMinX() +  editedFileContentLabel.getSelection().getLength() * editedFileContentLabel.getFont().getSize());
-                    int X = (int) editedFileContentLabel.getLayoutX() + endX;
-                    int Y = (int) (editedFileContentLabel.getParent().getParent().getLayoutY() + (int) bounds.getMinY() + 10);*/
-
-                    // Set comment node position
-                    commentNode.setPosition(posSelectionX+10, posSelectionY + 10);
-
+                    commentNode.setPosition(posSelectionX, posSelectionY);//3.5  15
+                    System.out.println("************************************Les vrai corrd");
+                    System.out.println("X : "+posSelectionX*3.5);
+                    System.out.println("Y : "+posSelectionY*15);
 
                     if (editedFileContentLabel.getParent().getParent() instanceof Pane) {
                         Pane parent = (Pane) editedFileContentLabel.getParent().getParent();
                         parent.getChildren().add(commentNode);
+                        //parent.getChildren().add(commentNode2);
                     } else {
                         System.out.println("Parent of editedFileContentLabel is not a Pane.");
                     }
@@ -260,8 +200,8 @@ public class Controler {
 
         public CommentNode(String commentText, Image image) {
             imageView = new ImageView(image);
-            imageView.setFitWidth(30); // Adjust width as needed
-            imageView.setFitHeight(30); // Adjust height as needed
+            imageView.setFitWidth(20); // Adjust width as needed
+            imageView.setFitHeight(20); // Adjust height as needed
 
             tooltip = new Tooltip(commentText);
             // attach the tooltip to the image view
@@ -279,14 +219,8 @@ public class Controler {
         }
 
         public void setPosition(double X, double Y) {
-            //this.imageView.setTranslateX(X);
-            //this.imageView.setTranslateY(Y);
-            //this.tooltip.setX(X);
-            //this.tooltip.setY(Y);
-            /*setLayoutX(X);
-            setLayoutY(Y);*/
-            setLayoutX(0);
-            setLayoutY(0);
+            setLayoutX(65+X);//65
+            setLayoutY(65+Y);
         }
     }
 
@@ -463,7 +397,8 @@ public class Controler {
         originalFileContentLabel.setText(model.getOriginalFileContent());
         //editedFileContentLabel.setText(model.getEditedFileContent());
         //editedFileContentLabel.setText(model.getEditedContentDiff());
-
+        String css = "-fx-font-weight: bold;";
+        editedFileContentLabel.setStyle(css);
         editedFileContentLabel.setText(model.getEditedContent());
         //setdisplayText(originalFileContentLabel.getText());
 
@@ -486,7 +421,7 @@ public class Controler {
     void handleSaveButtonClic(ActionEvent event) {
         // Cast de l'événement en tant que bouton cliqué
         //*Button clickedButton = (Button) event.getSource();
-
+        model.updateFile(model.getEditedContent());
         // Récupérer l'image associée au bouton cliqué
         ImageView imageView = (ImageView) saveButton.getGraphic();
 
@@ -496,6 +431,35 @@ public class Controler {
 
         // Afficher un autre bouton
         downloadButton.setVisible(true);// Assurez-vous que "autreBouton" est bien un autre bouton dans votre scène
+        downloadButton.setDisable(false);
+
+        downloadButton.setOnAction(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Sélectionner un emplacement pour enregistrer le fichier");
+            fileChooser.setCurrentDirectory(new File("."));
+
+            // Filtre pour n'afficher que les fichiers .txt
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Fichier texte", "txt");
+            fileChooser.setFileFilter(filter);
+
+            int response = fileChooser.showSaveDialog(null);
+
+            if(response == JFileChooser.APPROVE_OPTION) {
+
+                File file = fileChooser.getSelectedFile();
+
+                // Ajouter l'extension .txt si elle n'est pas déjà présente dans le nom du fichier
+                if (!file.getName().toLowerCase().endsWith(".txt")) {
+                    file = new File(file.getAbsolutePath() + ".txt");
+                }
+
+                try (PrintWriter fileOut = new PrintWriter(file)) {
+                    fileOut.println(editedFileContentLabel.getText());
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
 
