@@ -86,8 +86,8 @@ public class Controler {
             {
                 System.out.println("text selected");
                 //recuperer la position de la selection
-                posSelectionX = editedFileContentLabel.getSelection().getEnd();
-                posSelectionY = editedFileContentLabel.getSelection().
+                posSelectionX = editedFileContentLabel.getSelection().getStart() + editedFileContentLabel.getLength();
+                posSelectionY = editedFileContentLabel.getTranslateY();
                 System.out.println("X : "+posSelectionX);
                 System.out.println("Y : "+posSelectionY);
             }
@@ -249,37 +249,6 @@ public class Controler {
             }
         });
 
-        /*commentButton.setOnAction(event -> {
-            // Check if text is selected
-            if (!editedFileContentLabel.getSelectedText().isEmpty()) {
-
-                // Open a dialog box for comment input
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Ajouter un commentaire");
-                dialog.setHeaderText("Saisissez votre commentaire :");
-                dialog.setContentText("Commentaire :");
-
-                Optional<String> result = dialog.showAndWait();
-                if (result.isPresent()) {
-                    String commentaire = result.get();
-
-                    int startIndex = editedFileContentLabel.getSelection().getStart();
-                    int endIndex = editedFileContentLabel.getSelection().getEnd();
-                    // Create a label with the comment icon
-                    Label commentaireLabel = new Label();
-                    commentaireLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("../chat.png"))));
-                    Tooltip tooltip = new Tooltip("Commentaire : " + commentaire);
-                    commentaireLabel.setTooltip(tooltip);
-                    tooltip.show(this.primaryst, 100, 100);
-
-                    // Create IndexedComment object and add it to the list
-                    comments.add(new Comment(commentaire,commentaireLabel));
-                }
-            }
-        });*/
-
-
-
 
     }
 
@@ -314,8 +283,6 @@ public class Controler {
             //this.imageView.setTranslateY(Y);
             //this.tooltip.setX(X);
             //this.tooltip.setY(Y);
-            //setLayoutX(X);
-            //setLayoutY(Y);
             /*setLayoutX(X);
             setLayoutY(Y);*/
             setLayoutX(0);
@@ -495,11 +462,24 @@ public class Controler {
         //editedFileContentLabel.setText(model.getEditedFileContent());
         originalFileContentLabel.setText(model.getOriginalFileContent());
         //editedFileContentLabel.setText(model.getEditedFileContent());
-        editedFileContentLabel.setText(model.getEditedContentDiff());
+        //editedFileContentLabel.setText(model.getEditedContentDiff());
+
+        editedFileContentLabel.setText(model.getEditedContent());
+        //setdisplayText(originalFileContentLabel.getText());
+
+
 
         primaryst.setTitle("Interface Utilisateur");
         primaryst.setScene(new Scene(root, 800, 600));
         primaryst.show();
+    }
+    // set new display text
+    public void setdisplayText(String text)
+    {
+        //editedFileContentLabel.setText();
+        String selectedText = editedFileContentLabel.getText();
+        String formattedText = "<b>" + selectedText + "</b>"; // Bold formatting example
+        editedFileContentLabel.replaceSelection(formattedText);
     }
 
     @FXML

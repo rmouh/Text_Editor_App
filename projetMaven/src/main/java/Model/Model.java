@@ -4,20 +4,23 @@ import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.Patch;
 import com.github.difflib.text.DiffRow;
 import com.github.difflib.text.DiffRowGenerator;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 import java.io.*;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+
 
 public class Model {
     //private List<File> downloadedFiles;
     private File downloadedFiles[];
     private List<String> original;
     private List<String> edited;
+
+
 
 
     public Model() {
@@ -87,19 +90,89 @@ public class Model {
     public String getEditedContentDiff() throws IOException {
         DiffRowGenerator generator = DiffRowGenerator.create()
                 .showInlineDiffs(true)
+                .mergeOriginalRevised(true)
                 .inlineDiffByWord(true)
-                .oldTag(f -> "~")
-                .newTag(f -> "**")
+                .oldTag(f -> "<old> ")
+                .newTag(f -> "<new> ")
                 .build();
         List<DiffRow> rows = generator.generateDiffRows(original,edited);
         StringBuilder content = new StringBuilder();
         for (DiffRow row : rows) {
-            content.append(row.getOldLine() + "|" + row.getNewLine()+"|\n");
+            //content.append(row.getOldLine() + "->" + row.getNewLine().substring()+"\n");
+            content.append(row.getOldLine()+"\n");
         }
         //this.updateContent(newText);
         System.out.println(content.toString());
         return content.toString();
     }
+    /*public String getEditedContentDiff() throws IOException {
+        DiffRowGenerator generator = DiffRowGenerator.create()
+                .showInlineDiffs(true)
+                .inlineDiffByWord(true)
+                .oldTag(f -> "~")
+                .newTag(f -> "<strong>$0</strong>")
+                .build();
+        List<DiffRow> rows = generator.generateDiffRows(original, edited);
+        StringBuilder content = new StringBuilder();
+        for (DiffRow row : rows) {
+            String oldLine = row.getOldLine();
+            String newLine = row.getNewLine();
+
+            // Remplacer les balises ** par des balises <b> pour le texte en gras
+            newLine = newLine.replaceAll("\\*\\*", "<strong>$0</strong>");
+
+            // Ajouter la ligne formatée avec le texte en gras au contenu
+            content.append(oldLine).append("|").append(newLine).append("|\n");
+        }
+        System.out.println(content.toString());
+        return content.toString();
+    }*/
+    /*public String getEditedContentDiff() throws IOException {
+        DiffRowGenerator generator = DiffRowGenerator.create()
+                .showInlineDiffs(true)
+                .inlineDiffByWord(true)
+                .oldTag(f -> "~")
+                .newTag(f -> "*")
+                .build();
+        List<DiffRow> rows = generator.generateDiffRows(original,edited);
+        StringBuilder content = new StringBuilder();
+
+        for (DiffRow row : rows) {
+            String[] words = row.getOldLine().split(" ");
+            String newOldText = "";
+            for (String word : words) {
+                //content.append(row.getOldLine() + "|" + row.getNewLine()+"|\n");
+                if (word.startsWith("~") && word.endsWith("~")) {
+                    Text text = new Text(word + " ");
+                    text.setFont(Font.font("System", Font.getDefault().getSize()));
+                    text.setStrikethrough(true);
+                    text.setText(text.getText().replace("~", ""));
+                }
+                newOldText += word + " ";
+            }
+            // append the old words to the content
+            content.append(newOldText + "|");
+            String[] wordsN = row.getNewLine().split(" ");
+            String newText = "";
+            for (String word : wordsN){
+                //content.append(row.getOldLine() + "|" + row.getNewLine()+"|\n");
+                if (word.startsWith("*") && word.endsWith("*")) {
+                    Text text = new Text(word + " ");
+                    text.setFont(Font.font("System", FontWeight.BOLD, Font.getDefault().getSize()));
+                    text.setText(text.getText().replace("*", ""));
+                }
+                newText += word + " ";
+            }
+            // append the new words to the content
+            content.append(newText + "|\n");
+
+        }
+        updateContent(content.toString());
+        //this.updateContent(newText);
+        System.out.println("nouveauuuuu "+content.toString());
+        return content.toString();
+    }*/
+
 
     /*public void addDownloadedFile(File file) {
         downloadedFiles.add(file);
