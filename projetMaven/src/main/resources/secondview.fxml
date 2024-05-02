@@ -119,6 +119,7 @@
                   </ImageView>
                </graphic>
             </Button>
+
             <Label alignment="CENTER" prefHeight="58.0" prefWidth="400.0" text="Edited File" HBox.hgrow="ALWAYS" />
             <Label alignment="CENTER" prefHeight="73.0" prefWidth="392.0" text="Original File" HBox.hgrow="ALWAYS" />
          </children>

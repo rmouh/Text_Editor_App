@@ -52,14 +52,6 @@ public class Vue {
         ImageView imageView1 = this.createImageView(image, 150.0, 200.0, 1);
         ImageView imageView2 = this.createImageView(image, 150.0, 200.0, 2);
 
-        // Créer les boutons dans Vue
-       /* this.uploadEditedFileButton = this.createUploadButton("Upload Edited File", 179.0, 2);
-        this.uploadOriginalFileButton = this.createUploadButton("Upload Original File", 179.0, 1);
-        root = new AnchorPane();
-        root.setStyle("-fx-background-color: #ffd8cf;");
-        this.scene = new Scene(this.getLayout(), 600, 400);*/
-
-
         // Ajouter les boutons à la vue
         this.addToView(this.uploadOriginalFileButton,this.uploadEditedFileButton, imageView1, imageView2 );
 
@@ -74,16 +66,6 @@ public class Vue {
         controler.handleUploadButtonClick(uploadEditedFileButton,1);
     }
 
-   /* public void SecondPage ( Stage primaryStage, Controler controler) throws Exception
-    {
-        System.out.println("2nd page");
-        Parent root = FXMLLoader.load(getClass().getResource("../secondview2.fxml"));
-        primaryStage.setTitle("Interface Utilisateur");
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.show();
-        //loadFXML(primaryStage,controler,"../test.fxml");
-
-    }*/
     public Button createUploadButton(String buttonText, double width, int n) {
         Button uploadButton = new Button(buttonText);
         uploadButton.setPrefWidth(width);

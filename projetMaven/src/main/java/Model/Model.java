@@ -21,8 +21,6 @@ public class Model {
     private List<String> edited;
 
 
-
-
     public Model() {
         //downloadedFiles = new ArrayList<>();
         downloadedFiles = new File[2];
@@ -57,36 +55,7 @@ public class Model {
         }
         return content.toString();
     }
-    /*public void getDiff() throws IOException {
-        //build simple lists of the lines of the two testfiles
-        List<String> original = Files.readAllLines(downloadedFiles[0].toPath());
-        List<String> revised = Files.readAllLines(downloadedFiles[1].toPath());
 
-//compute the patch: this is the diffutils part
-        Patch<String> patch = DiffUtils.diff(original, revised);
-
-//simple output the computed patch to console
-        for (AbstractDelta<String> delta : patch.getDeltas()) {
-            System.out.println(delta);
-        }
-
-        //List<String> original = Files.readAllLines(downloadedFiles[0].toPath());
-        //List<String> revised = Files.readAllLines(downloadedFiles[1].toPath());
-
-        DiffRowGenerator generator = DiffRowGenerator.create()
-                .showInlineDiffs(true)
-                .inlineDiffByWord(true)
-                .oldTag(f -> "~")
-                .newTag(f -> "")
-                .build();
-        List<DiffRow> rows = generator.generateDiffRows(original,edited);
-
-        System.out.println("|original|new|");
-        System.out.println("|--------|---|");
-        for (DiffRow row : rows) {
-            System.out.println("|" + row.getOldLine() + "|" + row.getNewLine()+"|");
-        }
-    }*/
     public String getEditedContentDiff() throws IOException {
         DiffRowGenerator generator = DiffRowGenerator.create()
                 .showInlineDiffs(true)
@@ -105,81 +74,6 @@ public class Model {
         System.out.println(content.toString());
         return content.toString();
     }
-    /*public String getEditedContentDiff() throws IOException {
-        DiffRowGenerator generator = DiffRowGenerator.create()
-                .showInlineDiffs(true)
-                .inlineDiffByWord(true)
-                .oldTag(f -> "~")
-                .newTag(f -> "<strong>$0</strong>")
-                .build();
-        List<DiffRow> rows = generator.generateDiffRows(original, edited);
-        StringBuilder content = new StringBuilder();
-        for (DiffRow row : rows) {
-            String oldLine = row.getOldLine();
-            String newLine = row.getNewLine();
-
-            // Remplacer les balises ** par des balises <b> pour le texte en gras
-            newLine = newLine.replaceAll("\\*\\*", "<strong>$0</strong>");
-
-            // Ajouter la ligne formatée avec le texte en gras au contenu
-            content.append(oldLine).append("|").append(newLine).append("|\n");
-        }
-        System.out.println(content.toString());
-        return content.toString();
-    }*/
-    /*public String getEditedContentDiff() throws IOException {
-        DiffRowGenerator generator = DiffRowGenerator.create()
-                .showInlineDiffs(true)
-                .inlineDiffByWord(true)
-                .oldTag(f -> "~")
-                .newTag(f -> "*")
-                .build();
-        List<DiffRow> rows = generator.generateDiffRows(original,edited);
-        StringBuilder content = new StringBuilder();
-
-        for (DiffRow row : rows) {
-            String[] words = row.getOldLine().split(" ");
-            String newOldText = "";
-            for (String word : words) {
-                //content.append(row.getOldLine() + "|" + row.getNewLine()+"|\n");
-                if (word.startsWith("~") && word.endsWith("~")) {
-                    Text text = new Text(word + " ");
-                    text.setFont(Font.font("System", Font.getDefault().getSize()));
-                    text.setStrikethrough(true);
-                    text.setText(text.getText().replace("~", ""));
-                }
-                newOldText += word + " ";
-            }
-            // append the old words to the content
-            content.append(newOldText + "|");
-            String[] wordsN = row.getNewLine().split(" ");
-            String newText = "";
-            for (String word : wordsN){
-                //content.append(row.getOldLine() + "|" + row.getNewLine()+"|\n");
-                if (word.startsWith("*") && word.endsWith("*")) {
-                    Text text = new Text(word + " ");
-                    text.setFont(Font.font("System", FontWeight.BOLD, Font.getDefault().getSize()));
-                    text.setText(text.getText().replace("*", ""));
-                }
-                newText += word + " ";
-            }
-            // append the new words to the content
-            content.append(newText + "|\n");
-
-        }
-        updateContent(content.toString());
-        //this.updateContent(newText);
-        System.out.println("nouveauuuuu "+content.toString());
-        return content.toString();
-    }*/
-
-
-    /*public void addDownloadedFile(File file) {
-        downloadedFiles.add(file);
-    }
-    public List<File> getDownloadedFiles() {
-        return downloadedFiles;
-    }*/
     public String getOriginalFileContent() {
         return readFileContent(downloadedFiles[0]);
     }

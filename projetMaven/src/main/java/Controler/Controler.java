@@ -89,31 +89,14 @@ public class Controler {
             }
 
         });
-
-        // Désactiver l'édition initialement
-        //editedFileContentLabel.setEditable(false);
-
         // Ajouter des gestionnaires d'événements pour activer/désactiver les boutons en fonction de la sélection dans le TextArea
         editedFileContentLabel.selectedTextProperty().addListener((observable, oldValue, newValue) -> {
-           /* System.out.println("new value : " + newValue);
-            System.out.println("newvalue.empty : " + newValue.isEmpty());
-            System.out.println("oldValue : " + oldValue);*/
+
             boolean isTextSelected = !newValue.isEmpty();
             if(isTextSelected)
             {
 
-                System.out.println("Debut selectionement ");
-
-
-                //recuperer la position de la selection
-                /*int caretPosition = editedFileContentLabel.getSelection().getStart();
-                int lineNumber = 1;
-                for (int i = 0; i < caretPosition; i++) {
-                    if (editedFileContentLabel.getText().charAt(i) == '\n') {
-                        lineNumber++;
-                    }
-                }
-                */
+                //System.out.println("Debut selectionement ");
                 int lineNumber = 1;
                 int caretPosition = editedFileContentLabel.getCaretPosition();
                 int selectionStart = editedFileContentLabel.getSelection().getStart();
@@ -181,10 +164,6 @@ public class Controler {
                     } else {
                         System.out.println("Parent of editedFileContentLabel is not a Pane.");
                     }
-
-                    // Add comment node to the scene graph
-                    //((StackPane) editedFileContentLabel.getParent().getParent()).getChildren().add(commentNode);
-                    //.getChildren().add(commentNode); // Assuming commentNode should be displayed on the main scene
                 }
             }
         });
@@ -259,64 +238,17 @@ public class Controler {
                 editedFileContentLabel.setEditable(false);
                 model.updateContent(newText);
 
-                System.out.println("Contenu du modèle mis à jour DELETE : " + model.getEditedContent());
+                //System.out.println("Contenu du modèle mis à jour DELETE : " + model.getEditedContent());
 
-                //recupere le contunu du file modifier apartir de la liste
-                /*String str = model.getEditedContent();
-                System.out.println("*******************edited file content from array ");
-                System.out.println("[  "+str+"  ]");
-                //recupere le contunu du file modifier aparir du fichier
-                System.out.println("*******************edited file content from File ");
-                String str2 = model.getEditedFileContent();
-                System.out.println("[  "+str2+"  ]");*/
-               /* System.out.println("[  APRES LA MIS A JOUR   ]");
-
-                str = model.getEditedContent();
-                System.out.println("*******************edited file content from array ");
-                System.out.println("[  "+str+"  ]");
-                //recupere le contunu du file modifier aparir du fichier
-                System.out.println("*******************edited file content from File ");
-                 str2 = model.getEditedFileContent();
-                System.out.println("[  "+str2+"  ]");
-
-                */
             } else {
                 // Gérer la condition d'erreur (par exemple, afficher un message d'erreur ou désactiver la fonction de suppression)
                 System.out.println("Invalid index range for deletion.");
             }
-
-
-        /*if (!selectedText.isEmpty()) {
-            // Supprimer le texte sélectionné de la zone de texte
-            int startIndex = editedFileContentLabel.getSelection().getStart();
-            int endIndex = editedFileContentLabel.getSelection().getEnd();
-
-            String st = editedFileContentLabel.getText(startIndex, endIndex);
-            System.out.println("Texte sélectionneee : " + st);
-
-            if (startIndex >= 0 && endIndex >= startIndex && endIndex <= editedFileContentLabel.getText().length()) {
-                editedFileContentLabel.deleteText(startIndex, endIndex);
-                editedFileContentLabel.setEditable(false);
-                // Mettre à jour le fichier avec le texte modifié
-                String newText = editedFileContentLabel.getText();
-                model.updateContent(newText);
-            } else {
-                // Gérer la condition d'erreur (par exemple, afficher un message d'erreur ou désactiver la fonction de suppression)
-                System.out.println("Invalid index range for deletion.");
-            }*/
-
-            System.out.println("-------------------->le texte Supprimé : " + selectedText);
+            //System.out.println("-------------------->le texte Supprimé : " + selectedText);
         } else {
-            System.out.println("Aucun texte sélectionné pour supprimer.");
+           // System.out.println("Aucun texte sélectionné pour supprimer.");
         }
-        //recupere le contunu du file modifier apartir de la liste
-        /*String str = model.getEditedContent();
-        System.out.println("*******************edited file content from array ");
-        System.out.println("edited content"+str);
-        //recupere le contunu du file modifier aparir du fichier
-        System.out.println("*******************edited file content from File ");
-        String str2 = model.getEditedFileContent();
-        System.out.println("edited file content"+str2);*/
+
     }
     private void handleEditButtonClicked() {
         // Activez la modification du texte dans la zone de texte
@@ -351,7 +283,6 @@ public class Controler {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        //String str = (index == 0) ? model.getOriginalFileContent() : model.getEditedFileContent();
                         String str = (index == 0) ? model.getOriginalContent() : model.getEditedContent();
                         // Changer l'icône après la vérification du fichier texte
                         Image newImage = new Image(getClass().getResourceAsStream("/icon_txt_green.png"));
@@ -374,6 +305,12 @@ public class Controler {
                         }
 
                     } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Erreur");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Le fichier sélectionné n'est pas un fichier texte (.txt).");
+
+                        alert.showAndWait();
                         System.out.println("Le fichier sélectionné n'est pas un fichier texte (.txt).");
                         // Afficher un message d'erreur ou une notification à l'utilisateur si le fichier n'est pas un fichier texte
                     }
@@ -384,31 +321,19 @@ public class Controler {
 
     private void redirectToSecondPage() throws Exception {
         // Créer la deuxième page avec les boutons et les éléments nécessaires
-        // ...
         System.out.println("redirect to 2nd pg");
-        //vue.SecondPage(this.primaryst,this); // Afficher la deuxième page
-        //Parent root = FXMLLoader.load(getClass().getResource("../test2.fxml"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../secondview.fxml"));
         loader.setController(this);
         Parent root = loader.load();
-
-        //originalFileContentLabel.setText(model.getOriginalFileContent());
-        //editedFileContentLabel.setText(model.getEditedFileContent());
-        originalFileContentLabel.setText(model.getOriginalFileContent());
-        //editedFileContentLabel.setText(model.getEditedFileContent());
-        //editedFileContentLabel.setText(model.getEditedContentDiff());
         String css = "-fx-font-weight: bold;";
+        originalFileContentLabel.setStyle(css);
+        originalFileContentLabel.setText(model.getOriginalFileContent());
         editedFileContentLabel.setStyle(css);
         editedFileContentLabel.setText(model.getEditedContent());
-        //setdisplayText(originalFileContentLabel.getText());
-
-
-
         primaryst.setTitle("Interface Utilisateur");
         primaryst.setScene(new Scene(root, 800, 600));
         primaryst.show();
     }
-    // set new display text
     public void setdisplayText(String text)
     {
         //editedFileContentLabel.setText();
@@ -420,7 +345,6 @@ public class Controler {
     @FXML
     void handleSaveButtonClic(ActionEvent event) {
         // Cast de l'événement en tant que bouton cliqué
-        //*Button clickedButton = (Button) event.getSource();
         model.updateFile(model.getEditedContent());
         // Récupérer l'image associée au bouton cliqué
         ImageView imageView = (ImageView) saveButton.getGraphic();
@@ -452,7 +376,6 @@ public class Controler {
                 if (!file.getName().toLowerCase().endsWith(".txt")) {
                     file = new File(file.getAbsolutePath() + ".txt");
                 }
-
                 try (PrintWriter fileOut = new PrintWriter(file)) {
                     fileOut.println(editedFileContentLabel.getText());
                 } catch (FileNotFoundException e1) {
