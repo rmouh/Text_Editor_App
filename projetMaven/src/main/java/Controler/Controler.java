@@ -5,16 +5,14 @@ import Vue.Vue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
+import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -129,7 +127,7 @@ public class Controler {
 
             }
         });*/
-        commentButton.setOnAction(event -> {
+       /* commentButton.setOnAction(event -> {
             // Check if text is selected
             if (!editedFileContentLabel.getSelectedText().isEmpty()) {
 
@@ -166,6 +164,8 @@ public class Controler {
                             tooltip.show(this.primaryst, X, Y + 10);
 
                         }
+
+
                     });
 
                     if (editedFileContentLabel.getParent() instanceof StackPane) {
@@ -176,17 +176,61 @@ public class Controler {
                     }
 
                     // Assuming editedFileContentLabel is the first TextArea in the first StackPane:
-                    /*editedFileContentLabel.getParent().getChildrenUnmodifiable().stream()
+                    *//*editedFileContentLabel.getParent().getChildrenUnmodifiable().stream()
                             .filter(node -> node instanceof StackPane)
                             .map(node -> (StackPane) node)
                             .findFirst()
                             .ifPresent(stackPane -> {
                                 stackPane.getChildren().add(commentaireLabel);
-                            });*/
+                            });*//*
 
                 }
             }
+        });*/
+
+        commentButton.setOnAction(event -> {
+            // Check if text is selected
+            if (!editedFileContentLabel.getSelectedText().isEmpty()) {
+
+                // Open a dialog box for comment input
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Ajouter un commentaire");
+                dialog.setHeaderText("Saisissez votre commentaire :");
+                dialog.setContentText("Commentaire :");
+
+                Optional<String> result = dialog.showAndWait();
+                if (result.isPresent()) {
+                    String commentaire = result.get();
+
+                    // Create a custom CommentNode for image and tooltip
+                    Image commentImage = new Image(getClass().getResourceAsStream("../chat.png"));
+                    CommentNode commentNode = new CommentNode(commentaire, commentImage);
+
+                    // Calculate position based on selection end and mouse event
+                    int selectionEnd = editedFileContentLabel.getSelection().getEnd();
+                    Bounds bounds = editedFileContentLabel.getLayoutBounds();
+                    int endX = (int) ((int) bounds.getMinX() +  editedFileContentLabel.getSelection().getLength() * editedFileContentLabel.getFont().getSize());
+                    int X = (int) editedFileContentLabel.getLayoutX() + endX;
+                    int Y = (int) (editedFileContentLabel.getParent().getParent().getLayoutY() + (int) bounds.getMinY() + 10);
+
+                    // Set comment node position
+                    commentNode.setPosition(X, Y + 10);
+
+
+                    if (editedFileContentLabel.getParent() instanceof Pane) {
+                        Pane parent = (Pane) editedFileContentLabel.getParent();
+                        parent.getChildren().add(commentNode);
+                    } else {
+                        System.out.println("Parent of editedFileContentLabel is not a StackPane.");
+                    }
+
+                    // Add comment node to the scene graph
+                    //((StackPane) editedFileContentLabel.getParent().getParent()).getChildren().add(commentNode);
+                    //.getChildren().add(commentNode); // Assuming commentNode should be displayed on the main scene
+                }
+            }
         });
+
         /*commentButton.setOnAction(event -> {
             // Check if text is selected
             if (!editedFileContentLabel.getSelectedText().isEmpty()) {
@@ -222,6 +266,35 @@ public class Controler {
     }
 
 
+    public class CommentNode extends StackPane {
+        private ImageView imageView;
+        private Tooltip tooltip;
+
+        public CommentNode(String commentText, Image image) {
+            imageView = new ImageView(image);
+            imageView.setFitWidth(30); // Adjust width as needed
+            imageView.setFitHeight(30); // Adjust height as needed
+
+            tooltip = new Tooltip(commentText);
+            // attach the tooltip to the image view
+            Tooltip.install(imageView, tooltip);
+            imageView.setOnMouseClicked(e -> {
+                tooltip.show(this, e.getScreenX(), e.getScreenY());
+            });
+            getChildren().add(imageView);
+        }
+
+        public void setPosition(double X, double Y) {
+            //this.imageView.setTranslateX(X);
+            //this.imageView.setTranslateY(Y);
+            //this.tooltip.setX(X);
+            //this.tooltip.setY(Y);
+            //setLayoutX(X);
+            //setLayoutY(Y);
+            setLayoutX(X);
+            setLayoutY(Y);
+        }
+    }
 
 
     private void handleDeleteButtonClicked() {
@@ -290,14 +363,14 @@ public class Controler {
                             throw new RuntimeException(e);
                         }
                         //String str = (index == 0) ? model.getOriginalFileContent() : model.getEditedFileContent();
-                        //String str = (index == 0) ? model.getOriginalContent() : model.getEditedContent();
-                        String str = null;
+                        String str = (index == 0) ? model.getOriginalContent() : model.getEditedContent();
+                        /*String str = null;
                         try {
                             str = (index == 0) ? model.getOriginalContent() : model.getEditedContentDiff();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
-                        }
-                        System.out.println(str);
+                        }*/
+                       // System.out.println(str);
                         // Changer l'icône après la vérification du fichier texte
                         Image newImage = new Image(getClass().getResourceAsStream("/icon_txt_green.png"));
                         vue.replaceImageView(uploadButton, newImage);
@@ -313,6 +386,11 @@ public class Controler {
                                 throw new RuntimeException(e);
                             }*/
                             //System.out.println(str);
+                            try {
+                                model.updateContent(model.getEditedContentDiff());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             try {
                                 redirectToSecondPage();
                             } catch (Exception e) {
