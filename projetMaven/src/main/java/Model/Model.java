@@ -23,6 +23,7 @@ public class Model {
     public Model() {
         //downloadedFiles = new ArrayList<>();
         downloadedFiles = new File[2];
+        //aniaaaa
     }
     public void addDownloadedFile(File file, int index) throws IOException {
         downloadedFiles[index] = file;

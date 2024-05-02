@@ -207,7 +207,7 @@ public class Controler {
                     Image commentImage = new Image(getClass().getResourceAsStream("../chat.png"));
                     CommentNode commentNode = new CommentNode(commentaire, commentImage);
 
-                    // Calculate position based on selection end and mouse event
+                    // Calculate position based on selection end and mouse eventtt
                     int selectionEnd = editedFileContentLabel.getSelection().getEnd();
                     Bounds bounds = editedFileContentLabel.getLayoutBounds();
                     int endX = (int) ((int) bounds.getMinX() +  editedFileContentLabel.getSelection().getLength() * editedFileContentLabel.getFont().getSize());
