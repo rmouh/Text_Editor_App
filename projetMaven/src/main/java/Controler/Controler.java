@@ -46,6 +46,8 @@ public class Controler {
 
     @FXML
     private Button deleteButton;
+    double posSelectionX;
+    double posSelectionY;
 
     public Controler(Stage primaryStage) throws Exception {
 
@@ -80,16 +82,22 @@ public class Controler {
             System.out.println("newvalue.empty : " + newValue.isEmpty());
             System.out.println("oldValue : " + oldValue);*/
             boolean isTextSelected = !newValue.isEmpty();
+            if(isTextSelected)
+            {
+                System.out.println("text selected");
+                //recuperer la position de la selection
+                posSelectionX = editedFileContentLabel.getSelection().getEnd();
+                posSelectionY = editedFileContentLabel.getSelection().
+                System.out.println("X : "+posSelectionX);
+                System.out.println("Y : "+posSelectionY);
+            }
+            else
+                System.out.println("text not selected");
             //editButton.setDisable(!isTextSelected);
             commentButton.setDisable(!isTextSelected);
             deleteButton.setDisable(!isTextSelected);
         });
 
-        // Ajouter un gestionnaire d'événements pour le bouton d'édition
-       /* editButton.setOnAction(event -> {
-            // Activer l'édition
-            editedFileContentLabel.setEditable(true);
-        });*/
         editButton.setOnAction(event -> handleEditButtonClicked());
 
 
@@ -192,7 +200,6 @@ public class Controler {
         commentButton.setOnAction(event -> {
             // Check if text is selected
             if (!editedFileContentLabel.getSelectedText().isEmpty()) {
-
                 // Open a dialog box for comment input
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setTitle("Ajouter un commentaire");
@@ -207,15 +214,25 @@ public class Controler {
                     Image commentImage = new Image(getClass().getResourceAsStream("../chat.png"));
                     CommentNode commentNode = new CommentNode(commentaire, commentImage);
 
-                    // Calculate position based on selection end and mouse eventtt
-                    int selectionEnd = editedFileContentLabel.getSelection().getEnd();
+                    // Calculate position based on selection end position in the TextArea
+                    /*int X = editedFileContentLabel.getSelection().getEnd();
+                    int Y = editedFileContentLabel.getSelection().;
+                    // print X Y
+                    System.out.println("X : "+X);
+                    System.out.println("Y : "+Y);*/
+
+                    //int X = (int) editedFileContentLabel.getLayoutX() + editedFileContentLabel.getSelection().getEnd()+10;
+                    //int X = (int) (bounds.getMaxX() + 10);
+                    //int Y = (int) (bounds.getMaxY() + 10);
+                    //int Y = (int) editedFileContentLabel.get + 10;//editedFileContentLabel.getSelection().getEnd();
+                    /*int selectionEnd = editedFileContentLabel.getSelection().getEnd();
                     Bounds bounds = editedFileContentLabel.getLayoutBounds();
                     int endX = (int) ((int) bounds.getMinX() +  editedFileContentLabel.getSelection().getLength() * editedFileContentLabel.getFont().getSize());
                     int X = (int) editedFileContentLabel.getLayoutX() + endX;
-                    int Y = (int) (editedFileContentLabel.getParent().getParent().getLayoutY() + (int) bounds.getMinY() + 10);
+                    int Y = (int) (editedFileContentLabel.getParent().getParent().getLayoutY() + (int) bounds.getMinY() + 10);*/
 
                     // Set comment node position
-                    commentNode.setPosition(X, Y + 10);
+                    commentNode.setPosition(posSelectionX+10, posSelectionY + 10);
 
 
                     if (editedFileContentLabel.getParent().getParent() instanceof Pane) {
@@ -270,6 +287,7 @@ public class Controler {
     public class CommentNode extends StackPane {
         private ImageView imageView;
         private Tooltip tooltip;
+        private Boolean isTooltipVisible = false;
 
         public CommentNode(String commentText, Image image) {
             imageView = new ImageView(image);
@@ -279,8 +297,14 @@ public class Controler {
             tooltip = new Tooltip(commentText);
             // attach the tooltip to the image view
             Tooltip.install(imageView, tooltip);
-            imageView.setOnMouseDragEntered(e -> {
-                tooltip.show(this, e.getScreenX(), e.getScreenY());
+            imageView.setOnMouseClicked(e -> {
+                if (isTooltipVisible) {
+                    tooltip.hide();
+                    isTooltipVisible = false;
+                } else {
+                    tooltip.show(this, e.getScreenX()+10, e.getScreenY()+10);
+                    isTooltipVisible = true;
+                }
             });
             getChildren().add(imageView);
         }
@@ -292,8 +316,10 @@ public class Controler {
             //this.tooltip.setY(Y);
             //setLayoutX(X);
             //setLayoutY(Y);
-            setLayoutX(X);
-            setLayoutY(Y);
+            /*setLayoutX(X);
+            setLayoutY(Y);*/
+            setLayoutX(0);
+            setLayoutY(0);
         }
     }
 
