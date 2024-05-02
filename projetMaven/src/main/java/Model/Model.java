@@ -91,7 +91,7 @@ public class Model {
                 .showInlineDiffs(true)
                 .inlineDiffByWord(true)
                 .oldTag(f -> "~")
-                .newTag(f -> "")
+                .newTag(f -> "**")
                 .build();
         List<DiffRow> rows = generator.generateDiffRows(original,edited);
         StringBuilder content = new StringBuilder();
