@@ -51,9 +51,17 @@ public class Vue {
         Image image = new Image(getClass().getResourceAsStream("/icon_txt.png"));
         ImageView imageView1 = this.createImageView(image, 150.0, 200.0, 1);
         ImageView imageView2 = this.createImageView(image, 150.0, 200.0, 2);
+
+        // Créer les boutons dans Vue
+       /* this.uploadEditedFileButton = this.createUploadButton("Upload Edited File", 179.0, 2);
+        this.uploadOriginalFileButton = this.createUploadButton("Upload Original File", 179.0, 1);
+        root = new AnchorPane();
+        root.setStyle("-fx-background-color: #ffd8cf;");
+        this.scene = new Scene(this.getLayout(), 600, 400);*/
+
+
         // Ajouter les boutons à la vue
         this.addToView(this.uploadOriginalFileButton,this.uploadEditedFileButton, imageView1, imageView2 );
-
 
         // Créer la scène et ajouter les boutons de la vue à celle-ci
         //this.scene = new Scene(this.getLayout(), 600, 400);

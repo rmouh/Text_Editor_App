@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -217,11 +218,11 @@ public class Controler {
                     commentNode.setPosition(X, Y + 10);
 
 
-                    if (editedFileContentLabel.getParent() instanceof Pane) {
-                        Pane parent = (Pane) editedFileContentLabel.getParent();
+                    if (editedFileContentLabel.getParent().getParent() instanceof Pane) {
+                        Pane parent = (Pane) editedFileContentLabel.getParent().getParent();
                         parent.getChildren().add(commentNode);
                     } else {
-                        System.out.println("Parent of editedFileContentLabel is not a StackPane.");
+                        System.out.println("Parent of editedFileContentLabel is not a Pane.");
                     }
 
                     // Add comment node to the scene graph
@@ -278,7 +279,7 @@ public class Controler {
             tooltip = new Tooltip(commentText);
             // attach the tooltip to the image view
             Tooltip.install(imageView, tooltip);
-            imageView.setOnMouseClicked(e -> {
+            imageView.setOnMouseDragEntered(e -> {
                 tooltip.show(this, e.getScreenX(), e.getScreenY());
             });
             getChildren().add(imageView);
@@ -364,13 +365,6 @@ public class Controler {
                         }
                         //String str = (index == 0) ? model.getOriginalFileContent() : model.getEditedFileContent();
                         String str = (index == 0) ? model.getOriginalContent() : model.getEditedContent();
-                        /*String str = null;
-                        try {
-                            str = (index == 0) ? model.getOriginalContent() : model.getEditedContentDiff();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }*/
-                       // System.out.println(str);
                         // Changer l'icône après la vérification du fichier texte
                         Image newImage = new Image(getClass().getResourceAsStream("/icon_txt_green.png"));
                         vue.replaceImageView(uploadButton, newImage);
@@ -378,14 +372,6 @@ public class Controler {
 
                         if(model.verifyDownload()){
                             System.out.println("if reussi la diff ");
-                            //String str = model.readFileContent(model.getDownFile(0));
-                            //str = model.readFileContent(model.getDownFile(1));
-                            /*try {
-                                model.getDiff();
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }*/
-                            //System.out.println(str);
                             try {
                                 model.updateContent(model.getEditedContentDiff());
                             } catch (IOException e) {

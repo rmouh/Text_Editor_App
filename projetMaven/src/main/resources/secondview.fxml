@@ -9,11 +9,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.Pane?>
 <BorderPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="400.0" prefWidth="640.0" style="-fx-background-color: #ffd8cf" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox alignment="TOP_LEFT" prefHeight="239.0" prefWidth="63.0" spacing="10.0"> <!-- Utilisez alignment="TOP_LEFT" pour aligner les boutons en haut à gauche -->
@@ -54,17 +53,21 @@
 
    </left>
    <center>
-      <HBox layoutX="80.0" layoutY="32.0" prefHeight="337.0" prefWidth="483.0">
-         <children>
-            <Pane prefHeight="337.0" prefWidth="222.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <TextArea fx:id="editedFileContentLabel" editable="false" style="-fx-background-color: lightgrey; -fx-border-color: black;" />
-               </children>
-            </Pane>
-            <!--<TextArea fx:id="editedFileContentLabel" editable="false" style="-fx-background-color: lightgrey; -fx-border-color: black;" HBox.hgrow="ALWAYS" /> --><!--prefHeight="237.0" prefWidth="256.0"-->
-            <TextArea fx:id="originalFileContentLabel" editable="false" style="-fx-background-color: lightgrey; -fx-border-color: black;" HBox.hgrow="ALWAYS" /> <!--prefHeight="237.0" prefWidth="256.0"-->
-         </children>
-      </HBox>
+      <!--<Pane prefHeight="337.0" prefWidth="483.0">
+         <children>-->
+            <HBox prefHeight="304.0" prefWidth="517.0"> <!--layoutX="80.0" layoutY="32.0"-->
+               <!--<children>
+                  <Pane prefHeight="337.0" prefWidth="245.0" HBox.hgrow="ALWAYS">
+                     <children>-->
+                        <TextArea fx:id="editedFileContentLabel" editable="false" prefHeight="337.0" prefWidth="245.0" style="-fx-background-color: lightgrey; -fx-border-color: black;" HBox.hgrow="ALWAYS" />
+                     <!--</children>
+                  </Pane>-->
+                  <!--<TextArea fx:id="editedFileContentLabel" editable="false" style="-fx-background-color: lightgrey; -fx-border-color: black;" HBox.hgrow="ALWAYS" /> --><!--prefHeight="237.0" prefWidth="256.0"-->
+                  <TextArea fx:id="originalFileContentLabel" editable="false" prefHeight="337.0" prefWidth="245.0" style="-fx-background-color: lightgrey; -fx-border-color: black;" HBox.hgrow="ALWAYS" />
+               <!--</children>-->
+            </HBox>
+            <!--</children>
+        </Pane>-->
    </center>
    <right>
       <VBox spacing="10.0">
@@ -104,8 +107,8 @@
    <top>
       <HBox prefHeight="58.0" prefWidth="641.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" prefHeight="62.0" prefWidth="319.0" text="Edited File" HBox.hgrow="ALWAYS"/>
-            <Label alignment="CENTER" prefHeight="73.0" prefWidth="392.0" text="Original File" HBox.hgrow="ALWAYS"/>
+            <Label alignment="CENTER" prefHeight="58.0" prefWidth="400.0" text="Edited File" HBox.hgrow="ALWAYS" />
+            <Label alignment="CENTER" prefHeight="73.0" prefWidth="392.0" text="Original File" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </top>
